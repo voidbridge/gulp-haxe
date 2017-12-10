@@ -272,12 +272,17 @@ module.exports = (source, options) => {
 	if (haxeVersionCheck == null)
 		haxeVersionCheck = new Promise(function(success, _) {
 			let version = 'latest'
-			if ('haxe' in manifest && 'version' in manifest.haxe)
-				version = manifest.haxe.version
+			let resolveLibs = 'haxelib'
+			if ('haxe' in manifest) {
+				if ('version' in manifest.haxe)
+					version = manifest.haxe.version
+				if ('resolveLibs' in manifest.haxe)
+					resolveLibs = manifest.haxe.resolveLibs
+			}
 
 			fs.writeFileSync('.haxerc', JSON.stringify({
 				version: version,
-				resolveLibs: 'haxelib'
+				resolveLibs: resolveLibs
 			}))
 
 			gutil.log('Using haxe '+version)
